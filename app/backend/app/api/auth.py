@@ -25,5 +25,5 @@ def login(request: Request, session: Session):
     cred = CredentialSerializer(request.data)
     cred.is_valid()
     if token := srvs.login(session, **cred.validated_data):
-        return {"token": token.key}
+        return {"token": token}
     return {"message": "The phone number or the password is false"}, Status.BAD_REQUEST

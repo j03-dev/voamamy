@@ -15,5 +15,5 @@ def register(session, new_user: UserSerializer):
 def login(session, phone_number: str, password: str) -> User | None:
     if user := repo.get_user_by_phone_number(session, phone_number):
         if user.password == password:
-            return repo.get_or_create_token(session, user.id)
+            return repo.generate_token(session, user.id)
     return None
