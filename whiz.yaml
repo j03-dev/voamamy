@@ -1,0 +1,6 @@
+run-server:
+  workdir: app/backend
+  watch: ./**/*.py
+  command: |
+    source .venv/bin/activate
+    python ./app/main.py

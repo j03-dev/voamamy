@@ -14,7 +14,7 @@ JWT = jwt.Jwt(SECRET)
 TURSO_DB_URL = getenv("TURSO_DATABASE_URL")
 TURSO_DB_AUTH_TOKEN = getenv("TURSO_AUTH_TOKEN")
 
-DATABASE_URL = "sqlite:///database.db"
+DATABASE_URL = "sqlite+libsql:///database.db"
 
 ENGINE = create_engine(
     DATABASE_URL,
@@ -24,9 +24,8 @@ ENGINE = create_engine(
     # },
 )
 
-Base.metadata.create_all(ENGINE)
-
 
 class AppData:
     def __init__(self):
         self.engine = ENGINE
+        Base.metadata.create_all(ENGINE)

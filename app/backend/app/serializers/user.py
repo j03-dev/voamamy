@@ -14,7 +14,7 @@ class UserSerializer(serializer.Serializer):
     phone_number = serializer.CharField()  # TODO: add phone_number pattern
     full_name = serializer.CharField()
     password = serializer.CharField(min_length=8, write_only=True)
-    create_at = serializer.DateTimeField(required=False, nullable=True, read_only=True)
+    created_at = serializer.DateTimeField(required=False, nullable=True, read_only=True)
 
     class Meta:
         model = User
