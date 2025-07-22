@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/auth/auth_service.dart';
+import 'package:frontend/src/routes/app_routers.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
 
@@ -21,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       if (_formKey.currentState!.validate()) _formKey.currentState?.save();
       await _authService.login(_phoneNumber, _password);
+      Navigator.pushNamed(context, AppRouters.home);
     } on DioException catch (e) {
       String message = e.response?.data["message"];
       ScaffoldMessenger.of(
