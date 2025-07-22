@@ -1,18 +1,19 @@
-from repositories.user import get_user_by_phone_number
+from repositories import user as repo
 from serializers.user import UserSerializer
-from core.config import JWT
+from models.user import User
 
 
 def register(session, new_user: UserSerializer):
-    if not get_user_by_phone_number(session, new_user.validated_data["phone_number"]):
+    if not repo.get_user_by_phone_number(
+        session,
+        new_user.validated_data["phone_number"],
+    ):
         return new_user.save(session)
     return None
 
 
-def login(session, phone_number: str, password: str):
-    if user := get_user_by_phone_number(session, phone_number):
+def login(session, phone_number: str, password: str) -> User | None:
+    if user := repo.get_user_by_phone_number(session, phone_number):
         if user.password == password:
-            claims = {"user_id": user.id, "exp": 3600 * 24 * 7}
-            token = JWT.generate_token(claims)
-            return token
+            return repo.get_or_create_token(session, user.id)
     return None

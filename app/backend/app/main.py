@@ -1,6 +1,6 @@
 from oxapy import HttpServer
-from app.core.config import AppData
-from app.api import auth
+from core.config import AppData
+from api import auth
 
 server = HttpServer(("0.0.0.0", 5555))
 server.app_data(AppData())
