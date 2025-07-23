@@ -100,7 +100,7 @@ class _InputFieldState extends State<InputField> {
             color: Theme.of(context).primaryColor,
             height: widget.isTextArea ? 2.5 : null,
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           prefixIcon:
               widget.icon != null
                   ? Icon(widget.icon, color: Theme.of(context).primaryColor)

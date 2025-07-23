@@ -5,7 +5,6 @@ import 'package:frontend/src/features/auth/auth_service.dart';
 import 'package:frontend/src/routes/app_routers.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
-import 'package:frontend/src/widgets/separator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,20 +39,24 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 15.0),
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Login",
-                textAlign: TextAlign.center,
+                "Welcome back",
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 45,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.black,
                 ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Log in to your savings group",
+                style: TextStyle(fontSize: 24, color: Colors.black),
               ),
               const SizedBox(height: 60),
               InputField(
@@ -90,15 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'Login',
                 backgroundColor: Theme.of(context).primaryColor,
                 textColor: Colors.white,
-              ),
-              const SizedBox(height: 10),
-              const Separator(),
-              const SizedBox(height: 10),
-              RoundedButton(
-                action: () => Navigator.pushNamed(context, AppRouters.register),
-                text: 'Register',
-                backgroundColor: Colors.white,
-                textColor: Theme.of(context).primaryColor,
               ),
             ],
           ),
