@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
-  String? _fullName, _phoneNumber, _password;
+  String? _phoneNumber, _password;
 
   _submit() async {
     try {
@@ -41,12 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InputField(
-                label: 'Full name',
-                icon: Icons.person,
-                initialValue: _fullName,
-                onSaved: (value) => _fullName = value,
-              ),
               InputField(
                 label: 'Phone number',
                 icon: Icons.phone,
