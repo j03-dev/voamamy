@@ -10,5 +10,5 @@ def jwt(request: Request, next: Callable, **kwargs):
             request.user_id = claims["user_id"]
             return next(request, **kwargs)
         except jsonwebtoken.JwtError as err:
-            return {"message": str(err)}, Status.UNAUTHORIZED
-    return {"message": "Token is required"}, Status.UNAUTHORIZED
+            return {"detail": str(err)}, Status.UNAUTHORIZED
+    return {"detail": "Token is required"}, Status.UNAUTHORIZED

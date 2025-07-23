@@ -18,7 +18,7 @@ def me(request: Request, session: Session):
     if user := repo.get_user_by_id(session, request.user_id):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}
-    return {"message": "User not found"}, Status.NOT_FOUND
+    return {"detail": "User not found"}, Status.NOT_FOUND
 
 
 @router.get("/api/users/{user_id}")
@@ -27,7 +27,7 @@ def retrieve(request: Request, session: Session, user_id: str):
     if user := repo.get_user_by_id(session, user_id):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}
-    return {"message": "User not found"}, Status.NOT_FOUND
+    return {"detail": "User not found"}, Status.NOT_FOUND
 
 
 @router.put("/api/users/{user_id}")
@@ -38,4 +38,4 @@ def update(request: Request, session: Session, user_id: str):
     if user := srvs.update_user(session, user_id, new_user):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}, Status.ACCEPTED
-    return {"message": "User not found"}, Status.NOT_FOUND
+    return {"detail": "User not found"}, Status.NOT_FOUND

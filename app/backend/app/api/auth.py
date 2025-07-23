@@ -1,8 +1,8 @@
 from oxapy import Router, Request, Status
 from serializers.user import UserSerializer, CredentialSerializer
 from sqlalchemy.orm import Session
-from core.utils import with_session
 
+from core.utils import with_session
 from services import auth as srvs
 
 router = Router()
@@ -16,7 +16,7 @@ def register(request: Request, session: Session):
     if user := srvs.register(session, new_user):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}, Status.CREATED
-    return {"message": "This phone number is alredy used"}, Status.CONFLICT
+    return {"detail": "This phone number is alredy used"}, Status.CONFLICT
 
 
 @router.post("/api/auth/login")
@@ -26,4 +26,4 @@ def login(request: Request, session: Session):
     cred.is_valid()
     if token := srvs.login(session, **cred.validated_data):
         return {"token": token}
-    return {"message": "The phone number or the password is false"}, Status.BAD_REQUEST
+    return {"detail": "The phone number or the password is false"}, Status.BAD_REQUEST

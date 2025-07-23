@@ -1,10 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/src/core/validator.dart';
 import 'package:frontend/src/features/auth/auth_service.dart';
 import 'package:frontend/src/routes/app_routers.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:frontend/src/widgets/separator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,11 +21,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _submit() async {
     try {
-      if (_formKey.currentState!.validate()) _formKey.currentState?.save();
-      await _authService.login(_phoneNumber, _password);
-      Navigator.pushNamed(context, AppRouters.home);
-    } on DioException catch (e) {
-      String message = e.response?.data["message"];
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+        await _authService.login(_phoneNumber, _password);
+        Navigator.pushNamed(context, AppRouters.home);
+      }
+    } catch (_) {
+      String message =
+          "The `phone number` or `password` is false " +
+          "or your phone number is not in right format";
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
@@ -35,30 +40,65 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Text(
+                "Login",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const SizedBox(height: 60),
               InputField(
                 label: 'Phone number',
                 icon: Icons.phone,
                 initialValue: _phoneNumber,
                 onSaved: (value) => _phoneNumber = value,
+                validator: (value) {
+                  return requiredValidation(
+                    value,
+                    "Please enter your phone number",
+                  );
+                },
               ),
+              const SizedBox(height: 20),
               InputField(
                 label: 'Password',
                 icon: Icons.key,
                 isPassword: true,
                 initialValue: _password,
                 onSaved: (value) => _password = value,
+                validator: (value) {
+                  final error = requiredValidation(
+                    value,
+                    "Please enter your password",
+                  );
+                  if (error != null) return error;
+                  return passwordValidation(value);
+                },
               ),
+              const SizedBox(height: 50),
               RoundedButton(
                 action: _submit,
                 text: 'Login',
                 backgroundColor: Theme.of(context).primaryColor,
                 textColor: Colors.white,
+              ),
+              const SizedBox(height: 10),
+              const Separator(),
+              const SizedBox(height: 10),
+              RoundedButton(
+                action: () => Navigator.pushNamed(context, AppRouters.register),
+                text: 'Register',
+                backgroundColor: Colors.white,
+                textColor: Theme.of(context).primaryColor,
               ),
             ],
           ),

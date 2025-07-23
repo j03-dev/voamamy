@@ -27,4 +27,8 @@ class AuthService extends Service {
     final token = response.data["token"];
     await sharedPreference.saveToken(token);
   }
+
+  Future<void> logout() async {
+    await sharedPreference.delToken();
+  }
 }
