@@ -38,31 +38,27 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 15.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 40),
               Text(
                 "Welcome back",
-                style: TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
                 "Log in to your savings group",
-                style: TextStyle(fontSize: 24, color: Colors.black),
+                style: TextStyle(fontSize: 20),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 40),
               InputField(
                 label: 'Phone number',
                 icon: Icons.phone,
-                initialValue: _phoneNumber,
                 onSaved: (value) => _phoneNumber = value,
                 validator: (value) {
                   return requiredValidation(
@@ -76,7 +72,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: 'Password',
                 icon: Icons.key,
                 isPassword: true,
-                initialValue: _password,
                 onSaved: (value) => _password = value,
                 validator: (value) {
                   final error = requiredValidation(
@@ -87,12 +82,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   return passwordValidation(value);
                 },
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 40),
               RoundedButton(
                 action: _submit,
-                text: 'Login',
+                text: 'Log In',
                 backgroundColor: Theme.of(context).primaryColor,
                 textColor: Colors.white,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 5,
+                children: [
+                  Text("Dont't have an account?"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRouters.register);
+                    },
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color.fromRGBO(52, 152, 219, 1.0),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
