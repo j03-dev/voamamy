@@ -3,15 +3,15 @@ import 'package:frontend/src/services/service.dart';
 
 class AuthService extends Service {
   Future<User> register(
-    String? phone_number,
-    String? full_name,
+    String? phoneNumber,
+    String? fullName,
     String? password,
   ) async {
     final response = await dio.post(
       "$baseUrl/api/auth/register",
       data: {
-        "phone_number": phone_number,
-        "full_name": full_name,
+        "phone_number": phoneNumber,
+        "full_name": fullName,
         "password": password,
       },
     );
@@ -19,12 +19,12 @@ class AuthService extends Service {
     return User.fromJson(data);
   }
 
-  Future<User> login(String? phone_number, String? password) async {
+  Future<void> login(String? phoneNumber, String? password) async {
     final response = await dio.post(
       "$baseUrl/api/auth/login",
-      data: {"phone_number": phone_number, "password": password},
+      data: {"phone_number": phoneNumber, "password": password},
     );
-    final data = response.data["users"];
-    return User.fromJson(data);
+    final token = response.data["token"];
+    await sharedPreference.saveToken(token);
   }
 }

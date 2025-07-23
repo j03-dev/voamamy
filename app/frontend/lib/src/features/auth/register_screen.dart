@@ -39,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               InputField(
                 label: "Full Name",
