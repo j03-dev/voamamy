@@ -23,9 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Hello, Jean",
                 style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 40,
+                  vertical: 20,
                   horizontal: 15,
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -42,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,
@@ -52,15 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     FeatureCard(
                       icon: Icons.create_new_folder,
                       label: "Create a Group",
+                      action: () {},
                     ),
-                    FeatureCard(icon: Icons.group, label: "Join a Group"),
                     FeatureCard(
-                      icon: Icons.attach_money,
-                      label: "Request a Loan",
+                      icon: Icons.group,
+                      label: "Join a Group",
+                      action: () {},
                     ),
                     FeatureCard(
                       icon: Icons.show_chart,
                       label: "My Group Savings",
+                      action: () {},
+                    ),
+                    FeatureCard(
+                      icon: Icons.attach_money,
+                      label: "Request a Loan",
+                      action: () {},
                     ),
                   ],
                 ),
