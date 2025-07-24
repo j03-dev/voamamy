@@ -109,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       "Log In",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color.fromRGBO(52, 152, 219, 1.0),
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                   ),

@@ -13,6 +13,7 @@ class App extends StatelessWidget {
       title: 'Voamamy',
       theme: ThemeData(
         fontFamily: "Roboto",
+        appBarTheme: AppBarTheme(centerTitle: true),
         primaryColor: Color.fromRGBO(25, 158, 91, 1.0),
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color.fromRGBO(52, 152, 219, 1.0),
