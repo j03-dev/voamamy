@@ -1,6 +1,5 @@
 from repositories import user as repo
 from serializers.user import UserSerializer
-from models.user import User
 
 
 def register(session, new_user: UserSerializer):
@@ -12,7 +11,7 @@ def register(session, new_user: UserSerializer):
     return None
 
 
-def login(session, phone_number: str, password: str) -> User | None:
+def login(session, phone_number: str, password: str) -> str | None:
     if user := repo.get_user_by_phone_number(session, phone_number):
         if user.password == password:
             return repo.generate_token(session, user.id)

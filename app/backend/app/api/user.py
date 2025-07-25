@@ -5,11 +5,12 @@ from repositories import user as repo
 from serializers.user import UserSerializer
 from services import user as srvs
 
-from core.middlewares import jwt
+from core.middlewares import jwt, logger
 from core.utils import with_session
 
 router = Router()
 router.middleware(jwt)
+router.middleware(logger)
 
 
 @router.get("/api/users/me")

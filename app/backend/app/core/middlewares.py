@@ -3,6 +3,9 @@ from .config import JWT
 from oxapy import Request, jwt as jsonwebtoken, Status
 
 
+import logging
+
+
 def jwt(request: Request, next: Callable, **kwargs):
     if token := request.headers.get("authorization", "").replace("Bearer ", ""):
         try:
@@ -12,3 +15,8 @@ def jwt(request: Request, next: Callable, **kwargs):
         except jsonwebtoken.JwtError as err:
             return {"detail": str(err)}, Status.UNAUTHORIZED
     return {"detail": "Token is required"}, Status.UNAUTHORIZED
+
+
+def logger(request: Request, next: Callable, **kwargs):
+    logging.log(1000, f"{request.method} {request.uri}")
+    return next(request, **kwargs)

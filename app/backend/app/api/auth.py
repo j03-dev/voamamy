@@ -4,8 +4,10 @@ from sqlalchemy.orm import Session
 
 from core.utils import with_session
 from services import auth as srvs
+from core.middlewares import logger
 
 router = Router()
+router.middleware(logger)
 
 
 @router.post("/api/auth/register")
