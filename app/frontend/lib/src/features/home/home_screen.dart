@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, AppRouters.home);
             },
           ),
-          IconButton(icon: Icon(Icons.groups, size: 32), onPressed: () {}),
+          IconButton(icon: Icon(Icons.group, size: 32), onPressed: () {}),
           IconButton(icon: Icon(Icons.person, size: 32), onPressed: () {}),
         ],
       ),
