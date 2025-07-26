@@ -12,16 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _userService = UserService();
   User? _currentUser;
+  final _userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    fetchUser();
+    _fetchUser();
   }
 
-  void fetchUser() async {
+  void _fetchUser() async {
     final fetchedUser = await _userService.me();
     setState(() {
       _currentUser = fetchedUser;
@@ -117,7 +117,12 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(icon: Icon(Icons.group, size: 32), onPressed: () {}),
-          IconButton(icon: Icon(Icons.person, size: 32), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.person, size: 32),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRouters.profile);
+            },
+          ),
         ],
       ),
     );
