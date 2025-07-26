@@ -41,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 40),
               Text(
                 "Hello, $_fullName",
-                style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.justify,
               ),
               const SizedBox(height: 20),
               Container(

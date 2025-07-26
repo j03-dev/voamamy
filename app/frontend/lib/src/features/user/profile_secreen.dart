@@ -41,11 +41,12 @@ class _ProfileSecreenState extends State<ProfileSecreen> {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 40),
             Text(
               "Profile",
-              style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 40),
             Text(
@@ -57,14 +58,29 @@ class _ProfileSecreenState extends State<ProfileSecreen> {
               _currentUser?.phone_number ?? "",
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * .57),
-            RoundedButton(
-              text: "Log Out",
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              action: _logOut,
+            const SizedBox(height: 40),
+            Text(
+              "Settings:",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+            TextButton(onPressed: () {}, child: Text("Edit Profile")),
+            const SizedBox(height: 10),
+            TextButton(onPressed: () {}, child: Text("Notifications")),
+            const SizedBox(height: 10),
+            TextButton(onPressed: () {}, child: Text("Change Language")),
+            const SizedBox(height: 10),
+            TextButton(onPressed: () {}, child: Text("Help")),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: RoundedButton(
+          text: "Log Out",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          action: _logOut,
         ),
       ),
     );

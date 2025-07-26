@@ -21,7 +21,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
           children: [
             Text(
               "My Savings Group",
-              style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               textAlign: TextAlign.start,
             ),
             const SizedBox(height: 20),
@@ -31,7 +31,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
             ),
             Text(
               "1,200,000 MGA",
-              style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             RoundedButton(

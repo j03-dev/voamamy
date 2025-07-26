@@ -16,7 +16,7 @@ class FeatureCard extends StatelessWidget {
     return GestureDetector(
       onTap: action,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -15,7 +15,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             Text(
