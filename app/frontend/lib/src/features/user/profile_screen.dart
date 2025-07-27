@@ -5,14 +5,14 @@ import 'package:frontend/src/routes/app_routers.dart';
 import 'package:frontend/src/services/user_service.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
 
-class ProfileSecreen extends StatefulWidget {
-  const ProfileSecreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<ProfileSecreen> createState() => _ProfileSecreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileSecreenState extends State<ProfileSecreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   User? _currentUser;
   final _userService = UserService();
 
