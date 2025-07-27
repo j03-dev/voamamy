@@ -17,7 +17,6 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Voamamy',
       theme: ThemeData(
-        fontFamily: "Montserrat",
         appBarTheme: AppBarTheme(centerTitle: true),
         primaryColor: Color.fromRGBO(25, 158, 91, 1.0),
         colorScheme: ColorScheme.fromSwatch().copyWith(

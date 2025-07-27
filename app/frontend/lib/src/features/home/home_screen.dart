@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _fullName = _currentUser != null ? _currentUser!.full_name : "";
+    final _lastName =
+        _currentUser != null ? _currentUser!.full_name.split(" ").last : "";
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -40,9 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const SizedBox(height: 40),
               Text(
-                "Hello, $_fullName",
+                "Hello, $_lastName",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.justify,
               ),
               const SizedBox(height: 20),
               Container(
