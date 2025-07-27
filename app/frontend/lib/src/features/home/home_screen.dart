@@ -74,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.w600,
                     fontSize: mediumTextSize,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               SizedBox(height: verticalSpacing * 2.5),

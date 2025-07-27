@@ -80,92 +80,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child:
                 (!_isEdited)
-                    ? LayoutBuilder(
-                      builder: (context, _) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              fullName,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              phoneNumber,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                    ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          fullName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          phoneNumber,
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
                     )
-                    : LayoutBuilder(
-                      builder: (context, constriants) {
-                        return Form(
-                          key: _formKey,
-                          child: Column(
+                    : Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            initialValue: fullName,
+                            onSaved: (value) => _fullName = value,
+                            validator: (value) {
+                              return requiredValidation(
+                                value,
+                                "Please enter your full name",
+                              );
+                            },
+                          ),
+                          TextFormField(
+                            initialValue: phoneNumber,
+                            onSaved: (value) => _phoneNumber = value,
+                            validator: (value) {
+                              final error = requiredValidation(
+                                value,
+                                "Please enter your password",
+                              );
+                              if (error != null) return error;
+                              return passwordValidation(value);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
                             children: [
-                              TextFormField(
-                                initialValue: fullName,
-                                onSaved: (value) => _fullName = value,
-                                validator: (value) {
-                                  return requiredValidation(
-                                    value,
-                                    "Please enter your full name",
-                                  );
+                              TextButton(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isEdited = false;
+                                  });
                                 },
                               ),
-                              TextFormField(
-                                initialValue: phoneNumber,
-                                onSaved: (value) => _phoneNumber = value,
-                                validator: (value) {
-                                  final error = requiredValidation(
-                                    value,
-                                    "Please enter your password",
-                                  );
-                                  if (error != null) return error;
-                                  return passwordValidation(value);
+                              TextButton(
+                                child: Text(
+                                  "Save",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  _editProfile();
+                                  setState(() {
+                                    _isEdited = false;
+                                  });
                                 },
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  TextButton(
-                                    child: Text(
-                                      "Cancel",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isEdited = false;
-                                      });
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text(
-                                      "Save",
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      _editProfile();
-                                      setState(() {
-                                        _isEdited = false;
-                                      });
-                                    },
-                                  ),
-                                ],
                               ),
                             ],
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
           ),
           if (!_isEdited)
@@ -192,21 +181,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 40),
-            Text(
-              "Profile",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                "Profile",
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             _buildProfileCard(
               fullName: _currentUser?.full_name ?? 'Loading...',
               phoneNumber: _currentUser?.phone_number ?? 'Loading...',
             ),
             const SizedBox(height: 40),
-            Text(
-              "Settings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
             SettingItem(
               icon: Icons.notifications,
               label: "Notifications",
