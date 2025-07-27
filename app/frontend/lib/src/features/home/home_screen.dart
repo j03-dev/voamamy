@@ -31,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final lastName =
-        _currentUser != null ? _currentUser!.full_name.split(" ").last : "";
+        _currentUser != null
+            ? _currentUser!.full_name.split(" ").last
+            : "Loading...";
 
     final double verticalSpacing = MediaQuery.of(context).size.height * 0.02;
     final double largeTextSize = MediaQuery.of(context).size.width * 0.09;

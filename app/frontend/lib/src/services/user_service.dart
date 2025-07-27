@@ -24,9 +24,9 @@ class UserService extends Service {
   }
 
   Future<User> update(
-    String userId,
-    String phoneNumber,
-    String fullName,
+    String? userId,
+    String? fullName,
+    String? phoneNumber,
   ) async {
     final token = await sharedPreference.getToken();
     final response = await dio.put(
