@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/auth/auth_service.dart';
+import 'package:frontend/src/widgets/profile_card.dart';
+import 'package:frontend/src/widgets/setting_item.dart';
 import 'package:frontend/src/models/user.dart';
 import 'package:frontend/src/routes/app_routers.dart';
 import 'package:frontend/src/services/user_service.dart';
@@ -31,7 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _logOut() async {
     await AuthService().logout();
-    Navigator.pushNamed(context, AppRouters.login);
+    if (mounted) {
+      Navigator.pushNamed(context, AppRouters.login);
+    }
   }
 
   @override
@@ -44,19 +48,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 40),
-            Text(
-              "Profile",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 40),
-            Text(
-              _currentUser?.full_name ?? "",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _currentUser?.phone_number ?? "",
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+            ProfileCard(
+              icon: Icons.person,
+              label: _currentUser?.full_name ?? 'Loading...',
+              subtitle: _currentUser?.phone_number ?? 'Loading...',
+              action: () {},
             ),
             const SizedBox(height: 40),
             Text(
@@ -64,36 +60,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              child: Row(
-                spacing: 5,
-                children: [Icon(Icons.edit), Text("Edit Profile")],
-              ),
-              onTap: () {},
+            SettingItem(
+              icon: Icons.notifications,
+              label: "Notifications",
+              action: () {},
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              child: Row(
-                spacing: 5,
-                children: [Icon(Icons.message), Text("Notifications")],
-              ),
-              onTap: () {},
+            SettingItem(
+              icon: Icons.language,
+              label: "Change Language",
+              action: () {},
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              child: Row(
-                spacing: 5,
-                children: [Icon(Icons.language), Text("Change Language")],
-              ),
-              onTap: () {},
+            SettingItem(
+              icon: Icons.help,
+              label: "Help & Support",
+              action: () {},
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              child: Row(
-                spacing: 5,
-                children: [Icon(Icons.help), Text("Help")],
-              ),
-              onTap: () {},
+            SettingItem(
+              icon: Icons.privacy_tip,
+              label: "Privacy Policy",
+              action: () {},
+            ),
+            const SizedBox(height: 10),
+            SettingItem(
+              icon: Icons.info_outline,
+              label: "About",
+              action: () {},
             ),
           ],
         ),
