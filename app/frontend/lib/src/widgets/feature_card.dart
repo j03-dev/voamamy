@@ -13,23 +13,39 @@ class FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: action,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 60),
-            Text(
-              label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+        constraints: const BoxConstraints(minWidth: 100, minHeight: 100),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 1.5),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: screenSize.height * 0.02,
+          horizontal: screenSize.width * 0.02,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: constraints.maxWidth * 0.4),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: constraints.maxWidth * 0.1,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

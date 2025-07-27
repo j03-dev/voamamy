@@ -30,8 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _lastName =
+    final lastName =
         _currentUser != null ? _currentUser!.full_name.split(" ").last : "";
+
+    final double verticalSpacing = MediaQuery.of(context).size.height * 0.02;
+    final double largeTextSize = MediaQuery.of(context).size.width * 0.09;
+    final double mediumTextSize = MediaQuery.of(context).size.width * 0.055;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -39,32 +45,37 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+              SizedBox(height: verticalSpacing * 1.5),
               Text(
-                "Hello, $_lastName",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                "Hello, $lastName",
+                style: TextStyle(
+                  fontSize: largeTextSize,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: verticalSpacing),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 20,
+                  vertical: 15,
                   horizontal: 15,
                 ),
-                width: MediaQuery.of(context).size.width,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(207, 245, 223, 1.0),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Text(
                   "You have contributed this weeek",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
-                    fontSize: 25,
+                    fontSize: mediumTextSize,
                   ),
-                ),
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(207, 245, 223, 1.0),
-                  borderRadius: BorderRadius.circular(10),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: verticalSpacing * 2.5),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,

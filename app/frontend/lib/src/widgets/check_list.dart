@@ -38,7 +38,7 @@ class CheckList extends StatelessWidget {
             ],
           ),
         ),
-        Text(rightItem),
+        Text(rightItem, style: TextStyle(color: Colors.grey)),
       ],
     );
   }
