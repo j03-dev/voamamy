@@ -64,13 +64,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            TextButton(onPressed: () {}, child: Text("Edit Profile")),
+            GestureDetector(
+              child: Row(
+                spacing: 5,
+                children: [Icon(Icons.edit), Text("Edit Profile")],
+              ),
+              onTap: () {},
+            ),
             const SizedBox(height: 10),
-            TextButton(onPressed: () {}, child: Text("Notifications")),
+            GestureDetector(
+              child: Row(
+                spacing: 5,
+                children: [Icon(Icons.message), Text("Notifications")],
+              ),
+              onTap: () {},
+            ),
             const SizedBox(height: 10),
-            TextButton(onPressed: () {}, child: Text("Change Language")),
+            GestureDetector(
+              child: Row(
+                spacing: 5,
+                children: [Icon(Icons.language), Text("Change Language")],
+              ),
+              onTap: () {},
+            ),
             const SizedBox(height: 10),
-            TextButton(onPressed: () {}, child: Text("Help")),
+            GestureDetector(
+              child: Row(
+                spacing: 5,
+                children: [Icon(Icons.help), Text("Help")],
+              ),
+              onTap: () {},
+            ),
           ],
         ),
       ),
