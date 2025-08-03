@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:frontend/src/core/validator.dart';
 import 'package:frontend/src/features/auth/auth_service.dart';
 import 'package:frontend/src/widgets/setting_item.dart';
@@ -25,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _fetchUser();
   }
@@ -50,8 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _currentUser = newUser;
         });
       }
-    } on DioException catch (e) {
-      print(e);
+    } catch (_) {
       String message = "Failed to update the user profile";
       ScaffoldMessenger.of(
         context,
