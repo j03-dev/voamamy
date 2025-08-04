@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/core/validator.dart';
 import 'package:frontend/src/features/auth/auth_service.dart';
@@ -27,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (_) {
       String message =
-          "The `phone number` or `password` is false " +
+          "The `phone number` or `password` is false "
           "or your phone number is not in right format";
       ScaffoldMessenger.of(
         context,

@@ -74,31 +74,19 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 20),
-            // TODO: Iter members from _currentGroup
             Column(
               spacing: 10,
-              children: [
-                CheckList(
-                  leftItem: "Jean",
-                  rightItem: "124 456 780",
-                  status: Status.Checked,
-                ),
-                CheckList(
-                  leftItem: "Marie",
-                  rightItem: "123 456 780",
-                  status: Status.Checked,
-                ),
-                CheckList(
-                  leftItem: "Joseph",
-                  rightItem: "123 456 780",
-                  status: Status.Checked,
-                ),
-                CheckList(
-                  leftItem: "Luc",
-                  rightItem: "123 456 780",
-                  status: Status.Pedding,
-                ),
-              ],
+              children:
+                  _currentGroup?.members
+                      .map(
+                        (member) => CheckList(
+                          leftItem: member.user.full_name,
+                          rightItem: member.user.phone_number,
+                          status: Status.Pedding,
+                        ),
+                      )
+                      .toList() ??
+                  [],
             ),
           ],
         ),

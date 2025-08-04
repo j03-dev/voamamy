@@ -1,6 +1,7 @@
 from oxapy import serializer
 from models.group import Group
 from core.utils import new_id
+from serializers.user import UserSerializer
 
 
 class MemberSerializer(serializer.Serializer):
@@ -8,6 +9,8 @@ class MemberSerializer(serializer.Serializer):
     user_id = serializer.CharField(read_only=True, required=False)
     group_id = serializer.CharField()
     joined_at = serializer.CharField(read_only=True, required=False)
+
+    user = UserSerializer(read_only=True, required=False)  # type: ignore
 
 
 class GroupSerializer(serializer.Serializer):

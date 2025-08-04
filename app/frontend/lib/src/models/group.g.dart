@@ -12,6 +12,10 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
   creator_id: json['creator_id'] as String,
   savings: json['savings'] as String,
   created_at: json['created_at'] as String,
+  members:
+      (json['members'] as List<dynamic>)
+          .map((e) => Member.fromJson(e as Map<String, dynamic>))
+          .toList(),
 );
 
 Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
@@ -20,4 +24,21 @@ Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
   'creator_id': instance.creator_id,
   'created_at': instance.created_at,
   'savings': instance.savings,
+  'members': instance.members,
+};
+
+Member _$MemberFromJson(Map<String, dynamic> json) => Member(
+  id: json['id'] as String,
+  user_id: json['user_id'] as String,
+  group_id: json['group_id'] as String,
+  joined_at: json['joined_at'] as String,
+  user: User.fromJson(json['user'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
+  'id': instance.id,
+  'user_id': instance.user_id,
+  'group_id': instance.group_id,
+  'joined_at': instance.joined_at,
+  'user': instance.user,
 };

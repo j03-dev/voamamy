@@ -1,6 +1,7 @@
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, relationship, Mapped
 from datetime import datetime
 
+from models.group import Member
 from models import Base
 
 
@@ -12,3 +13,5 @@ class User(Base):
     full_name: Mapped[str] = mapped_column()
     password: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+
+    member: Mapped["Member"] = relationship(back_populates="user")
