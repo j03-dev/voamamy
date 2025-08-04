@@ -1,5 +1,5 @@
 from oxapy import serializer
-from models.group import Group
+from models import Group
 from core.utils import new_id
 from serializers.user import UserSerializer
 

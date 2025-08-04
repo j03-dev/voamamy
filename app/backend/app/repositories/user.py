@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
 from typing import Optional
 from core.config import JWT
-from models.user import User
+from models import User
 
 
 def get_user_by_id(session: Session, user_id: str) -> Optional[User]:
-    return session.query(User).filter_by(id=user_id).first()
+    return session.query(User).filter(User.id == user_id).first()
 
 
 def get_user_by_phone_number(session: Session, phone_number: str) -> Optional[User]:
-    return session.query(User).filter_by(phone_number=phone_number).first()
+    return session.query(User).filter(User.phone_number == phone_number).first()
 
 
 def generate_token(session: Session, user_id: str) -> str:

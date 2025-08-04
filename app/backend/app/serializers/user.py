@@ -1,6 +1,6 @@
 from oxapy import serializer
 
-from models.user import User
+from models import User
 from core.utils import new_id
 
 
@@ -25,8 +25,7 @@ class UserSerializer(serializer.Serializer):
         nullable=True,
         write_only=True,
     )
-    created_at = serializer.DateTimeField(
-        required=False, nullable=True, read_only=True)
+    created_at = serializer.DateTimeField(required=False, nullable=True, read_only=True)
 
     class Meta:
         model = User
