@@ -5,7 +5,8 @@ part 'group.g.dart';
 
 @JsonSerializable()
 class Group {
-  String id, name, creator_id, created_at, savings;
+  String id, name, creator_id, created_at;
+  double savings;
   List<Member> members;
 
   Group({
@@ -25,6 +26,8 @@ class Group {
 @JsonSerializable()
 class Member {
   String id, user_id, group_id, joined_at;
+  bool has_contributed_this_week;
+
   User user;
 
   Member({
@@ -33,6 +36,7 @@ class Member {
     required this.group_id,
     required this.joined_at,
     required this.user,
+    required this.has_contributed_this_week,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);

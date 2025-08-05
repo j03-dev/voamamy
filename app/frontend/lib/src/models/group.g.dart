@@ -10,7 +10,7 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
   id: json['id'] as String,
   name: json['name'] as String,
   creator_id: json['creator_id'] as String,
-  savings: json['savings'] as String,
+  savings: (json['savings'] as num).toDouble(),
   created_at: json['created_at'] as String,
   members:
       (json['members'] as List<dynamic>)
@@ -33,6 +33,7 @@ Member _$MemberFromJson(Map<String, dynamic> json) => Member(
   group_id: json['group_id'] as String,
   joined_at: json['joined_at'] as String,
   user: User.fromJson(json['user'] as Map<String, dynamic>),
+  has_contributed_this_week: json['has_contributed_this_week'] as bool,
 );
 
 Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
@@ -40,5 +41,6 @@ Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
   'user_id': instance.user_id,
   'group_id': instance.group_id,
   'joined_at': instance.joined_at,
+  'has_contributed_this_week': instance.has_contributed_this_week,
   'user': instance.user,
 };

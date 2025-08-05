@@ -58,7 +58,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             Text(
-              _currentGroup?.savings ?? "Loading...",
+              _currentGroup?.savings.toString() ?? "Loading...",
               style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -82,7 +82,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
                         (member) => CheckList(
                           leftItem: member.user.full_name,
                           rightItem: member.user.phone_number,
-                          status: Status.Pedding,
+                          status: member.has_contributed_this_week,
                         ),
                       )
                       .toList() ??

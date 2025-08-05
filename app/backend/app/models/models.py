@@ -1,6 +1,6 @@
 from sqlalchemy.orm import mapped_column, relationship, Mapped, DeclarativeBase
 from sqlalchemy import ForeignKey
-from datetime import datetime
+from datetime import datetime, date
 
 
 class Base(DeclarativeBase):
@@ -25,7 +25,9 @@ class Contribution(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     member_id: Mapped[str] = mapped_column(ForeignKey("members.id"))
     group_id: Mapped[str] = mapped_column(ForeignKey("groups.id"))
-    at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    at: Mapped[date] = mapped_column(default=datetime.utcnow().date)
+    week_number: Mapped[int] = mapped_column()
+    year: Mapped[int] = mapped_column()
 
     member: Mapped["Member"] = relationship(back_populates="contributions")
 

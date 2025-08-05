@@ -1,7 +1,12 @@
 from oxapy import serializer
 from models import Group
+
 from core.utils import new_id
 from serializers.user import UserSerializer
+from repositories import group as repo
+from sqlalchemy.orm import Session
+
+from datetime import datetime
 
 
 class MemberSerializer(serializer.Serializer):
@@ -11,6 +16,21 @@ class MemberSerializer(serializer.Serializer):
     joined_at = serializer.CharField(read_only=True, required=False)
 
     user = UserSerializer(read_only=True, required=False)  # type: ignore
+
+    @staticmethod
+    def has_contributed_this_week(session: Session, member_id: str) -> bool:
+        today = datetime.utcnow().date()
+        week_number = today.isocalendar().week
+        year = today.isocalendar().year
+        return repo.has_contributed_this_week(session, member_id, week_number, year)
+
+    def to_representation(self, instance):
+        session = self.context.get("session")
+        data = super().to_representation(instance)
+        data["has_contributed_this_week"] = self.has_contributed_this_week(
+            session, data["id"]
+        )
+        return data
 
 
 class GroupSerializer(serializer.Serializer):

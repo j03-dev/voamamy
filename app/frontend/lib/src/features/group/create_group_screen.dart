@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/core/validator.dart';
 import 'package:frontend/src/features/group/group_service.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
@@ -17,12 +18,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   _submit() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState?.save();
-      await _groupService.create(_name);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Group Created")));
+    try {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+        await _groupService.create(_name);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Group Created")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Somethink is went wrong on create new group")),
+      );
     }
   }
 
@@ -45,6 +52,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               InputField(
                 label: "Group Name",
                 onSaved: (value) => _name = value,
+                validator: (value) {
+                  return requiredValidation(
+                    value,
+                    "Please enter the group name",
+                  );
+                },
               ),
               const SizedBox(height: 20),
               RoundedButton(
