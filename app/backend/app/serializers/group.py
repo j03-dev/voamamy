@@ -50,3 +50,14 @@ class GroupSerializer(serializer.Serializer):
         validated_data["id"] = new_id()
         validated_data["creator_id"] = request.user_id
         return super().create(session, validated_data)
+
+
+class ContributionSerializer(serializer.Serializer):
+    id = serializer.CharField(required=False, read_only=True)
+    member_id = serializer.CharField(required=False, read_only=True)
+    group_id = serializer.CharField(required=False, read_only=True)
+    at = serializer.CharField(required=False, read_only=True)
+    week_number = serializer.CharField(required=False, read_only=True)
+    year = serializer.CharField(required=False, read_only=True)
+
+    group = GroupSerializer(required=False, read_only=True)  # type: ingore

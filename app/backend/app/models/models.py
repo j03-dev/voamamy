@@ -30,6 +30,7 @@ class Contribution(Base):
     year: Mapped[int] = mapped_column()
 
     member: Mapped["Member"] = relationship(back_populates="contributions")
+    group: Mapped["Group"] = relationship(back_populates="contributions")
 
 
 class Member(Base):
@@ -55,3 +56,4 @@ class Group(Base):
     savings: Mapped[float] = mapped_column(default=0)
 
     members: Mapped[list["Member"]] = relationship(back_populates="group")
+    contributions: Mapped[list["Contribution"]] = relationship(back_populates="group")

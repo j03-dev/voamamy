@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Group, Member, Contribution
+from models import Group, Member, Contribution, User
 from typing import Optional
 from core.utils import new_id
 
@@ -21,10 +21,11 @@ def get_groups_by_user_id(session: Session, user_id: str) -> Optional[Group]:
     )
 
 
-def add_member_to_group(session, user_id: str, group_id):
+def add_member_to_group(session, user_id: str, group_id) -> Member:
     new_member = Member(id=new_id(), user_id=user_id, group_id=group_id)
     session.add(new_member)
     session.commit()
+    return new_member
 
 
 def has_contributed_this_week(
@@ -40,3 +41,28 @@ def has_contributed_this_week(
         .first()
     )
     return contribution is not None
+
+
+def get_member_by_user_id(session: Session, user_id) -> Member:
+    if user := session.get(User, user_id):
+        return user.member
+    return None
+
+
+def create_contribution(
+    session: Session,
+    member_id: str,
+    group_id: str,
+    week_number: int,
+    year: int,
+):
+    new_contribution = Contribution(
+        id=new_id(),
+        member_id=member_id,
+        group_id=group_id,
+        week_number=week_number,
+        year=year,
+    )
+    session.add(new_contribution)
+    session.commit()
+    return new_contribution

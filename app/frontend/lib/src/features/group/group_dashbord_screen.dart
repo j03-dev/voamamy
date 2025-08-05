@@ -38,6 +38,21 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
     }
   }
 
+  void _markAsContributed() async {
+    try {
+      final updatedGroup = await _groupService.markAsContributed();
+      setState(() {
+        _currentGroup = updatedGroup;
+      });
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("May be you have already contributed in this week"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +81,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
               text: 'Mark as Contributed',
               backgroundColor: Theme.of(context).colorScheme.secondary,
               textColor: Colors.white,
-              action: () {},
+              action: _markAsContributed,
             ),
             const SizedBox(height: 20),
             Text(

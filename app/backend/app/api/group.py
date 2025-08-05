@@ -29,3 +29,12 @@ def mygroup(request: Request, session: Session):
         group_serializer = GroupSerializer(instance=group, context={"session": session})
         return {"groups": group_serializer.data}, Status.CREATED
     return {"detail": "Group not found"}, Status.NOT_FOUND
+
+
+@router.post("/api/groups/contributions")
+@with_session
+def contribute(request: Request, session: Session):
+    if group := srvs.contribute_to_group_user_member(session, request.user_id):
+        group_serializer = GroupSerializer(instance=group, context={"session": session})
+        return {"groups": group_serializer.data}
+    return {"detail": "You have already contribute in this weeke"}, Status.BAD_REQUEST
