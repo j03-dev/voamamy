@@ -17,6 +17,7 @@ def create(session: Session, user_id: str, new_group: GroupSerializer):
 
 def record_weekly_group_contribution(session: Session, user_id: str, group_id: str) -> Optional[Group]:
     if user := session.get(User, user_id):
+        # Check if the user has already contributed to a group this week.
         if not MemberSerializer.has_contributed_this_week(session, user.member.id):
             today = datetime.utcnow().date()
             week_number = today.isocalendar().week
