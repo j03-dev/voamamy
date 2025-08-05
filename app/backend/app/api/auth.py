@@ -4,10 +4,8 @@ from sqlalchemy.orm import Session
 
 from core.utils import with_session
 from services import auth as srvs
-from core.middlewares import logger
 
 router = Router()
-router.middleware(logger)
 
 
 @router.post("/api/auth/register")
@@ -18,7 +16,7 @@ def register(request: Request, session: Session):
     if user := srvs.register(session, new_user):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}, Status.CREATED
-    return {"detail": "This phone number is alredy used"}, Status.CONFLICT
+    return {"detail": "A user with this phone number already exists."}, Status.CONFLICT
 
 
 @router.post("/api/auth/login")
@@ -28,4 +26,4 @@ def login(request: Request, session: Session):
     cred.is_valid()
     if token := srvs.login(session, **cred.validated_data):
         return {"token": token}
-    return {"detail": "The phone number or the password is false"}, Status.BAD_REQUEST
+    return {"detail": "The provided phone number or password is incorrect."}, Status.BAD_REQUEST

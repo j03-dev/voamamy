@@ -24,10 +24,10 @@ class GroupService extends Service {
     return Group.fromJson(data);
   }
 
-  Future<Group> markAsContributed() async {
+  Future<Group> markAsContributed(String? groupId) async {
     final token = await sharedPreference.getToken();
     final response = await dio.post(
-      "$baseUrl/api/groups/contributions",
+      "$baseUrl/api/groups/$groupId/contributions",
       options: Options(headers: {"authorization": "Bearer $token"}),
     );
     final data = response.data["groups"];

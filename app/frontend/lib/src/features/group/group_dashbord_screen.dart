@@ -40,7 +40,9 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
 
   void _markAsContributed() async {
     try {
-      final updatedGroup = await _groupService.markAsContributed();
+      final updatedGroup = await _groupService.markAsContributed(
+        _currentGroup?.id,
+      );
       setState(() {
         _currentGroup = updatedGroup;
       });

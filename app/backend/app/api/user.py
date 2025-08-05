@@ -5,12 +5,11 @@ from repositories import user as repo
 from serializers.user import UserSerializer
 from services import user as srvs
 
-from core.middlewares import jwt, logger
+from core.middlewares import jwt
 from core.utils import with_session
 
 router = Router()
 router.middleware(jwt)
-router.middleware(logger)
 
 
 @router.get("/api/users/me")
@@ -19,7 +18,7 @@ def me(request: Request, session: Session):
     if user := repo.get_user_by_id(session, request.user_id):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}
-    return {"detail": "User not found"}, Status.NOT_FOUND
+    return {"detail": "Authenticated user profile not found."}, Status.NOT_FOUND
 
 
 @router.get("/api/users/{user_id}")
@@ -28,7 +27,7 @@ def retrieve(request: Request, session: Session, user_id: str):
     if user := repo.get_user_by_id(session, user_id):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}
-    return {"detail": "User not found"}, Status.NOT_FOUND
+    return {"detail": f"User with ID '{user_id}' not found."}, Status.NOT_FOUND
 
 
 @router.put("/api/users/{user_id}")
@@ -39,4 +38,4 @@ def update(request: Request, session: Session, user_id: str):
     if user := srvs.update_user(session, user_id, new_user):
         user_serializer = UserSerializer(instance=user)
         return {"users": user_serializer.data}, Status.ACCEPTED
-    return {"detail": "User not found"}, Status.NOT_FOUND
+    return {"detail": f"Cannot update: User with ID '{user_id}' not found."}, Status.NOT_FOUND

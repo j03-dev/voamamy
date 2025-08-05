@@ -5,11 +5,11 @@ from models import User
 
 
 def get_user_by_id(session: Session, user_id: str) -> Optional[User]:
-    return session.query(User).filter(User.id == user_id).first()
+    return session.query(User).filter(User.id == user_id).first()  # type: ignore
 
 
 def get_user_by_phone_number(session: Session, phone_number: str) -> Optional[User]:
-    return session.query(User).filter(User.phone_number == phone_number).first()
+    return session.query(User).filter(User.phone_number == phone_number).first()  # type: ignore
 
 
 def generate_token(session: Session, user_id: str) -> str:

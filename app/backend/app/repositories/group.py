@@ -43,12 +43,6 @@ def has_contributed_this_week(
     return contribution is not None
 
 
-def get_member_by_user_id(session: Session, user_id) -> Member:
-    if user := session.get(User, user_id):
-        return user.member
-    return None
-
-
 def create_contribution(
     session: Session,
     member_id: str,
