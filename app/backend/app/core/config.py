@@ -19,8 +19,8 @@ DATABASE_URL = "sqlite+libsql:///replicated.db"
 ENGINE = create_engine(
     DATABASE_URL,
     connect_args={
-        "auth_token": TURSO_DB_URL,
-        "sync_url": TURSO_DB_AUTH_TOKEN,
+        "auth_token": TURSO_DB_AUTH_TOKEN,
+        "sync_url": TURSO_DB_URL,
     },
 )
 
