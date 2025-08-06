@@ -35,13 +35,22 @@ class _RequestLoanScreenState extends State<RequestLoanScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("Request a loan")),
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               InputField(
                 label: "Enter Amount",
+                icon: Icons.attach_money,
                 onSaved: (value) => _amount = value,
+                suffixWidget: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text("MGA"),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               RoundedButton(

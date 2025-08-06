@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class InputField<T> extends StatefulWidget {
   final String label;
   final IconData? icon;
+  final Widget? suffixWidget;
   final T? initialValue;
   final ValueChanged<String?>? onSaved;
   final bool isPassword;
@@ -18,6 +19,7 @@ class InputField<T> extends StatefulWidget {
     super.key,
     required this.label,
     this.icon,
+    this.suffixWidget,
     this.initialValue,
     this.onSaved,
     this.isPassword = false,
@@ -45,6 +47,7 @@ class _InputFieldState extends State<InputField> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -72,7 +75,7 @@ class _InputFieldState extends State<InputField> {
                       });
                     },
                   )
-                  : null,
+                  : widget.suffixWidget,
           contentPadding: EdgeInsets.symmetric(
             vertical: widget.isTextArea ? 20 : 15,
             horizontal: 20,
