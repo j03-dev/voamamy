@@ -43,3 +43,24 @@ class Member {
 
   Map<String, dynamic> toJson() => _$MemberToJson(this);
 }
+
+@JsonSerializable()
+class Loan {
+  String id, member_id, group_id, amount, interest, at, state;
+  Member member;
+
+  Loan({
+    required this.id,
+    required this.member_id,
+    required this.group_id,
+    required this.amount,
+    required this.interest,
+    required this.at,
+    required this.state,
+    required this.member,
+  });
+
+  factory Loan.fromJson(Map<String, dynamic> json) => _$LoanFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LoanToJson(this);
+}

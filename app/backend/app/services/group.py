@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from serializers.group import GroupSerializer, MemberSerializer
+from serializers.group import GroupSerializer, MemberSerializer, LoanSerializer
 from repositories import group as repo
-from models import Group, User
+from models import Group, User, LoanState, Loan
 
 from typing import Optional
 from datetime import datetime
@@ -15,9 +15,12 @@ def create(session: Session, user_id: str, new_group: GroupSerializer):
     return None
 
 
-def record_weekly_group_contribution(session: Session, user_id: str, group_id: str) -> Optional[Group]:
+def record_weekly_group_contribution(
+    session: Session,
+    user_id: str,
+    group_id: str,
+) -> Optional[Group]:
     if user := session.get(User, user_id):
-        # Check if the user has already contributed to a group this week.
         if not MemberSerializer.has_contributed_this_week(session, user.member.id):
             today = datetime.utcnow().date()
             week_number = today.isocalendar().week
@@ -32,4 +35,18 @@ def record_weekly_group_contribution(session: Session, user_id: str, group_id: s
             contribution.member.group.savings += 10_000
             session.commit()
             return contribution.group
+    return None
+
+
+def request_laon(session: Session, new_loan: LoanSerializer):
+    if user := session.get(User, id):
+        if (
+            not session.query(Loan)
+            .filter(
+                Loan.member_id == user.member.id,
+                Loan.state == LoanState.PENDING | Loan.state == LoanState.UNPAID,
+            )
+            .all()
+        ):
+            return new_loan.save(session)
     return None

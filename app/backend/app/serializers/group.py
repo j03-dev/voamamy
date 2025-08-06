@@ -1,5 +1,5 @@
 from oxapy import serializer
-from models import Group
+from models import Group, Loan, LoanState, User, Member
 
 from core.utils import new_id
 from serializers.user import UserSerializer
@@ -56,8 +56,46 @@ class ContributionSerializer(serializer.Serializer):
     id = serializer.CharField(required=False, read_only=True)
     member_id = serializer.CharField(required=False, read_only=True)
     group_id = serializer.CharField(required=False, read_only=True)
-    at = serializer.CharField(required=False, read_only=True)
+    at = serializer.DateTimeField(required=False, read_only=True)
     week_number = serializer.CharField(required=False, read_only=True)
-    year = serializer.CharField(required=False, read_only=True)
+    year = serializer.IntegerField(required=False, read_only=True)
 
-    group = GroupSerializer(required=False, read_only=True)  # type: ingore
+    group = GroupSerializer(required=False, read_only=True)  # type: ignore
+
+
+class LoanSerializer(serializer.Serializer):
+    id = serializer.CharField(required=False, read_only=True)
+    member_id = serializer.CharField(required=False, read_only=True)
+    group_id = serializer.CharField(required=False, read_only=True)
+    amount = serializer.CharField()
+    interest = serializer.CharField(required=False, read_only=True)
+    at = serializer.CharField(required=False, read_only=True)
+    state = serializer.CharField(
+        enum_values=["pending", "accepted", "refused", "repaid", "unpaid"],
+        required=False,
+        nullable=True,
+    )
+
+    member = MemberSerializer(required=False, read_only=True)  # type: ignore
+
+    class Meta:
+        model = Loan
+
+    def validate(self, attr):
+        if state_str := attr.get("state"):
+            attr["state"] = LoanState.from_str(state_str)
+        return attr
+
+    def create(self, session, validated_data):
+        request = self.context.get("request")
+        if user := session.get(User, request.user_id):
+            member: Member = user.member
+            validated_data.update(
+                {
+                    "id": new_id(),
+                    "member_id": member.id,
+                    "group_id": member.group_id,
+                }
+            )
+            return super().context(session, validated_data)
+        return None

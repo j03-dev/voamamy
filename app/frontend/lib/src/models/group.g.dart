@@ -44,3 +44,25 @@ Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
   'has_contributed_this_week': instance.has_contributed_this_week,
   'user': instance.user,
 };
+
+Loan _$LoanFromJson(Map<String, dynamic> json) => Loan(
+  id: json['id'] as String,
+  member_id: json['member_id'] as String,
+  group_id: json['group_id'] as String,
+  amount: json['amount'] as String,
+  interest: json['interest'] as String,
+  at: json['at'] as String,
+  state: json['state'] as String,
+  member: Member.fromJson(json['member'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$LoanToJson(Loan instance) => <String, dynamic>{
+  'id': instance.id,
+  'member_id': instance.member_id,
+  'group_id': instance.group_id,
+  'amount': instance.amount,
+  'interest': instance.interest,
+  'at': instance.at,
+  'state': instance.state,
+  'member': instance.member,
+};

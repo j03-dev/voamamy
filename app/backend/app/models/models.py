@@ -1,6 +1,7 @@
 from sqlalchemy.orm import mapped_column, relationship, Mapped, DeclarativeBase
 from sqlalchemy import ForeignKey
 from datetime import datetime, date
+from enum import Enum
 
 
 class Base(DeclarativeBase):
@@ -44,6 +45,45 @@ class Member(Base):
     user: Mapped["User"] = relationship(back_populates="member")
     group: Mapped["Group"] = relationship(back_populates="members")
     contributions: Mapped[list["Contribution"]] = relationship(back_populates="member")
+    loans: Mapped[list["Loan"]] = relationship(back_populates="member")
+
+
+class LoanState(str, Enum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REFUSED = "refused"
+    REPAID = "repaid"
+    UNPAID = "unpaid"
+
+    @staticmethod
+    def from_str(state: str):
+        match state.strip().lower():
+            case "pending":
+                return LoanState.PENDING
+            case "accepted":
+                return LoanState.ACCEPTED
+            case "refused":
+                return LoanState.REFUSED
+            case "repaid":
+                return LoanState.REPAID
+            case "unpaid":
+                return LoanState.UNPAID
+            case _:
+                raise ValueError(f"Unknow loan state {state}")
+
+
+class Loan(Base):
+    __tablename__ = "loans"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    member_id: Mapped[str] = mapped_column(ForeignKey("members.id"))
+    group_id: Mapped[str] = mapped_column(ForeignKey("groups.id"))
+    amount: Mapped[float] = mapped_column()
+    interest: Mapped[float] = mapped_column(default=10.0)
+    at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    state: Mapped[LoanState] = mapped_column(default=LoanState.PENDING)
+
+    member: Mapped["Member"] = relationship(back_populates="loans")
 
 
 class Group(Base):

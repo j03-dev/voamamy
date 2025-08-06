@@ -33,4 +33,15 @@ class GroupService extends Service {
     final data = response.data["groups"];
     return Group.fromJson(data);
   }
+
+  Future<Loan> requestLoan({String? amount, String? state}) async {
+    final token = await sharedPreference.getToken();
+    final response = await dio.post(
+      "$baseUrl/api/groups/loans",
+      data: {"amount": amount, "state": state},
+      options: Options(headers: {"authorization": "Bearer $token"}),
+    );
+    final data = response.data["loans"];
+    return Loan.fromJson(data);
+  }
 }

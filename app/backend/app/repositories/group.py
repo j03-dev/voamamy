@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Group, Member, Contribution, User
+from models import Group, Member, Contribution
 from typing import Optional
 from core.utils import new_id
 

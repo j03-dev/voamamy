@@ -3,7 +3,6 @@ from oxapy import jwt
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
-from models import Base
 
 load_dotenv()
 
@@ -25,4 +24,3 @@ ENGINE = create_engine(
 class AppData:
     def __init__(self):
         self.engine = ENGINE
-        Base.metadata.create_all(ENGINE)
