@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/core/validator.dart';
-import 'package:frontend/src/features/auth/auth_service.dart';
 import 'package:frontend/src/routes/app_routers.dart';
+import 'package:frontend/src/viewmodels/auth_view_model.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,22 +14,33 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _authService = AuthService();
   String? _fullName, _phoneNumber, _password;
   final _formKey = GlobalKey<FormState>();
 
-  _submit() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState?.save();
-        await _authService.register(_phoneNumber, _fullName, _password);
-        Navigator.pushNamed(context, AppRouters.login);
+  _submit(AuthViewModel authViewModel) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      bool success = await authViewModel.register(
+        _phoneNumber,
+        _fullName,
+        _password,
+      );
+      if (success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Account created successfully! Please log in."),
+            ),
+          );
+          Navigator.pushNamed(context, AppRouters.login);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(authViewModel.errorMessage!)));
+        }
       }
-    } catch (_) {
-      final message = "Make sure all of your information is correct";
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -89,11 +101,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  RoundedButton(
-                    text: "Register",
-                    action: _submit,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    textColor: Colors.white,
+                  Consumer<AuthViewModel>(
+                    builder: (context, authViewModel, child) {
+                      return RoundedButton(
+                        action:
+                            authViewModel.isLoading
+                                ? () {}
+                                : _submit(authViewModel),
+                        text:
+                            authViewModel.isLoading
+                                ? "Registering..."
+                                : "Register",
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                      );
+                    },
                   ),
                 ],
               ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/core/validator.dart';
-import 'package:frontend/src/features/auth/auth_service.dart';
 import 'package:frontend/src/routes/app_routers.dart';
+import 'package:frontend/src/viewmodels/auth_view_model.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,24 +14,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
   String? _phoneNumber, _password;
 
-  _submit() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState?.save();
-        await _authService.login(_phoneNumber, _password);
-        Navigator.pushNamed(context, AppRouters.home);
+  _submit(AuthViewModel authViewModel) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      bool success = await authViewModel.login(_phoneNumber, _password);
+      if (success) {
+        if (mounted) {
+          Navigator.pushNamed(context, AppRouters.home);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(authViewModel.errorMessage!)));
+        }
       }
-    } catch (_) {
-      String message =
-          "The `phone number` or `password` is false "
-          "or your phone number is not in right format";
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -82,11 +83,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               const SizedBox(height: 40),
-              RoundedButton(
-                action: _submit,
-                text: 'Log In',
-                backgroundColor: Theme.of(context).primaryColor,
-                textColor: Colors.white,
+              Consumer<AuthViewModel>(
+                builder: (context, authViewModel, child) {
+                  return RoundedButton(
+                    action:
+                        authViewModel.isLoading
+                            ? () {}
+                            : () => _submit(authViewModel),
+                    text: authViewModel.isLoading ? 'Logging In...' : "Log In",
+                    backgroundColor: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                  );
+                },
               ),
               const SizedBox(height: 24),
               Row(

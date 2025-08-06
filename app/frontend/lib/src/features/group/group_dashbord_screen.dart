@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/group/group_service.dart';
-import 'package:frontend/src/models/group.dart';
+import 'package:frontend/src/viewmodels/group_view_model.dart';
 import 'package:frontend/src/widgets/check_list.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class GroupDashboardScreen extends StatefulWidget {
   const GroupDashboardScreen({super.key});
@@ -12,46 +12,28 @@ class GroupDashboardScreen extends StatefulWidget {
 }
 
 class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
-  Group? _currentGroup;
-  final _groupService = GroupService();
-
   @override
   void initState() {
     super.initState();
-    _fetchGroup();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GroupViewModel>(context, listen: false).fetchMyGroup();
+    });
   }
 
-  _fetchGroup() async {
-    try {
-      final fetchedGroup = await _groupService.my();
-      setState(() {
-        _currentGroup = fetchedGroup;
-      });
-    } catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "May be you don't have group yet, so pls join group or create one!",
-          ),
-        ),
-      );
-    }
-  }
-
-  void _markAsContributed() async {
-    try {
-      final updatedGroup = await _groupService.markAsContributed(
-        _currentGroup?.id,
-      );
-      setState(() {
-        _currentGroup = updatedGroup;
-      });
-    } catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("May be you have already contributed in this week"),
-        ),
-      );
+  void _markAsContributed(GroupViewModel groupViewModel) async {
+    bool success = await groupViewModel.markAsContributed();
+    if (success) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Contribution marked sucessfully!")),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(groupViewModel.errorMessage!)));
+      }
     }
   }
 
@@ -59,54 +41,73 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              _currentGroup?.name ?? "Loading...",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.start,
+      body: Consumer<GroupViewModel>(
+        builder: (context, groupViewModel, child) {
+          if (groupViewModel.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (groupViewModel.errorMessage != null) {
+            return Center(child: Text('Error: ${groupViewModel.errorMessage}'));
+          } else if (groupViewModel.currentGroup == null) {
+            return Center(child: Text('No Group data available.'));
+          }
+
+          final currentGroup = groupViewModel.currentGroup!;
+
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  currentGroup.name,
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Total Savings",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  currentGroup.savings.toString(),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                RoundedButton(
+                  text:
+                      groupViewModel.isLoading
+                          ? 'Marking'
+                          : 'Mark as Contributed',
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  textColor: Colors.white,
+                  action:
+                      groupViewModel.isLoading
+                          ? () {}
+                          : () => _markAsContributed(groupViewModel),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Adding Members",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  spacing: 10,
+                  children:
+                      currentGroup.members
+                          .map(
+                            (member) => CheckList(
+                              leftItem: member.user.full_name,
+                              rightItem: member.user.phone_number,
+                              status: member.has_contributed_this_week,
+                            ),
+                          )
+                          .toList(),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Text(
-              "Total Savings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            Text(
-              _currentGroup?.savings.toString() ?? "Loading...",
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            RoundedButton(
-              text: 'Mark as Contributed',
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              textColor: Colors.white,
-              action: _markAsContributed,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              "Adding Members",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 20),
-            Column(
-              spacing: 10,
-              children:
-                  _currentGroup?.members
-                      .map(
-                        (member) => CheckList(
-                          leftItem: member.user.full_name,
-                          rightItem: member.user.phone_number,
-                          status: member.has_contributed_this_week,
-                        ),
-                      )
-                      .toList() ??
-                  [],
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

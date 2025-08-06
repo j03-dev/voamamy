@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/group/group_service.dart';
+import 'package:frontend/src/viewmodels/group_view_model.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class RequestLoanScreen extends StatefulWidget {
   const RequestLoanScreen({super.key});
@@ -12,21 +13,22 @@ class RequestLoanScreen extends StatefulWidget {
 
 class _RequestLoanScreenState extends State<RequestLoanScreen> {
   String? _amount;
-  final _groupService = GroupService();
   final _formKey = GlobalKey<FormState>();
 
-  void _requestLoan() async {
-    try {
-      await _groupService.requestLoan(amount: _amount);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Loan Requested")));
-    } catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("You have alredy laon that pending or not yet repaid."),
-        ),
-      );
+  void _requestLoan(GroupViewModel groupViewModel) async {
+    bool success = await groupViewModel.requestLoan(amount: _amount);
+    if (success) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Loan Requested")));
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(groupViewModel.errorMessage!)));
+      }
     }
   }
 
@@ -53,11 +55,21 @@ class _RequestLoanScreenState extends State<RequestLoanScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              RoundedButton(
-                text: "Request Loan",
-                action: _requestLoan,
-                textColor: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor,
+              Consumer<GroupViewModel>(
+                builder: (context, groupViewModel, child) {
+                  return RoundedButton(
+                    text:
+                        groupViewModel.isLoading
+                            ? 'Requesting..'
+                            : "Request Loan",
+                    action:
+                        groupViewModel.isLoading
+                            ? () {}
+                            : () => _requestLoan(groupViewModel),
+                    textColor: Colors.white,
+                    backgroundColor: Theme.of(context).primaryColor,
+                  );
+                },
               ),
             ],
           ),

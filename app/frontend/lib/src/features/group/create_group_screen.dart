@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/core/validator.dart';
-import 'package:frontend/src/features/group/group_service.dart';
+import 'package:frontend/src/viewmodels/group_view_model.dart';
 import 'package:frontend/src/widgets/input_field.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -12,24 +13,27 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  final _groupService = GroupService();
-
   String? _name;
   final _formKey = GlobalKey<FormState>();
 
-  _submit() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState?.save();
-        await _groupService.create(_name);
+  _submit(GroupViewModel groupViewModel) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      bool success = await groupViewModel.createGroup(_name);
+      if (success) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Group Created")));
+          Navigator.pop(context);
+        }
+      }
+    } else {
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text("Group Created")));
+        ).showSnackBar(SnackBar(content: Text(groupViewModel.errorMessage!)));
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Somethink is went wrong on create new group")),
-      );
     }
   }
 
@@ -60,11 +64,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              RoundedButton(
-                text: 'Create Group',
-                backgroundColor: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                action: _submit,
+              Consumer<GroupViewModel>(
+                builder: (context, groupViewModel, child) {
+                  return RoundedButton(
+                    text:
+                        groupViewModel.isLoading
+                            ? 'Creating...'
+                            : 'Create Group',
+                    backgroundColor: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    action:
+                        groupViewModel.isLoading
+                            ? () {}
+                            : () => _submit(groupViewModel),
+                  );
+                },
               ),
             ],
           ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/core/validator.dart';
-import 'package:frontend/src/features/auth/auth_service.dart';
+import 'package:frontend/src/viewmodels/auth_view_model.dart';
+import 'package:frontend/src/viewmodels/user_view_model.dart';
 import 'package:frontend/src/widgets/setting_item.dart';
-import 'package:frontend/src/models/user.dart';
 import 'package:frontend/src/routes/app_routers.dart';
-import 'package:frontend/src/services/user_service.dart';
 import 'package:frontend/src/widgets/rounded_button.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,55 +15,62 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? _currentUser;
   bool _isEdited = false;
-  final _userService = UserService();
-
   String? _fullName, _phoneNumber;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _fetchUser();
-  }
-
-  _fetchUser() async {
-    final fetchedUser = await _userService.me();
-    setState(() {
-      _currentUser = fetchedUser;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserViewModel>(context, listen: false).fetchCurrentUser();
     });
   }
 
-  _editProfile() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState?.save();
-        final newUser = await _userService.update(
-          _currentUser?.id,
-          _fullName,
-          _phoneNumber,
-        );
+  _editProfile(UserViewModel userViewModel) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      final currentUser = userViewModel.currentUser;
+      final success = await userViewModel.updateCurrentUser(
+        currentUser?.id,
+        _fullName,
+        _phoneNumber,
+      );
+      if (success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Profile updated successfully!")),
+          );
+        }
         setState(() {
-          _currentUser = newUser;
+          _isEdited = false;
         });
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(userViewModel.errorMessage!)));
+        }
       }
-    } catch (_) {
-      String message = "Failed to update the user profile";
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
-  _logOut() async {
-    await AuthService().logout();
+  _logOut(AuthViewModel authViewModel, UserViewModel userViewModel) async {
+    await authViewModel.logout();
+    userViewModel.clearUserData();
     if (mounted) {
-      Navigator.pushNamed(context, AppRouters.login);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRouters.login,
+        (route) => false,
+      );
     }
   }
 
-  Widget _buildProfileCard({fullName, phoneNumber}) {
+  Widget _buildProfileCard({required UserViewModel userViewModel}) {
+    final fullName = userViewModel.currentUser?.full_name ?? "Loading...";
+    final phoneNumber = userViewModel.currentUser?.phone_number ?? "Loading...";
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
       decoration: BoxDecoration(
@@ -134,18 +141,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   });
                                 },
                               ),
-                              TextButton(
-                                child: Text(
-                                  "Save",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  _editProfile();
-                                  setState(() {
-                                    _isEdited = false;
-                                  });
+                              Consumer<UserViewModel>(
+                                builder: (context, userViewModel, child) {
+                                  return TextButton(
+                                    onPressed:
+                                        userViewModel.isLoading
+                                            ? null
+                                            : () {
+                                              _editProfile(userViewModel);
+                                            },
+                                    child:
+                                        userViewModel.isLoading
+                                            ? CircularProgressIndicator()
+                                            : Text(
+                                              "Save",
+                                              style: TextStyle(
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).primaryColor,
+                                              ),
+                                            ),
+                                  );
                                 },
                               ),
                             ],
@@ -185,9 +202,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            _buildProfileCard(
-              fullName: _currentUser?.full_name ?? 'Loading...',
-              phoneNumber: _currentUser?.phone_number ?? 'Loading...',
+            Consumer<UserViewModel>(
+              builder: (context, userViewModel, child) {
+                if (userViewModel.isLoading &&
+                    userViewModel.currentUser == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (userViewModel.errorMessage != null) {
+                  return Center(
+                    child: Text('Error: ${userViewModel.errorMessage}'),
+                  );
+                }
+                return _buildProfileCard(userViewModel: userViewModel);
+              },
             ),
             const SizedBox(height: 40),
             SettingItem(
@@ -222,14 +249,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: RoundedButton(
-          text: "Log Out",
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          action: _logOut,
-        ),
+      bottomNavigationBar: Consumer2<AuthViewModel, UserViewModel>(
+        builder: (context, authViewModel, userViewModel, child) {
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: RoundedButton(
+              text: authViewModel.isLoading ? "Logging Out..." : "Log Out",
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              action:
+                  authViewModel.isLoading
+                      ? () {}
+                      : () => _logOut(authViewModel, userViewModel),
+            ),
+          );
+        },
       ),
     );
   }
