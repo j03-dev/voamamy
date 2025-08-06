@@ -10,3 +10,6 @@ dependencies = [
     "python-dotenv",
     "sqlalchemy-libsql",
 ]
+
+[tool.setuptools.packages.find]
+where = ["app"]
